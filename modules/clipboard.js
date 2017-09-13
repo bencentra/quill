@@ -66,10 +66,26 @@ class Clipboard extends Module {
       if (!options.matchVisual && matcher === matchSpacing) return;
       this.addMatcher(selector, matcher);
     });
+    if (options.attributors) {
+      if (Array.isArray(options.attributors.attributes)) {
+        options.attributors.attributes.forEach((attr) => this.addAttributor(attr, 'attribute'));
+      }
+      if (Array.isArray(options.attributors.style)) {
+        options.attributors.style.forEach((attr) => this.addAttributor(attr));
+      }
+    }
   }
 
   addMatcher(selector, matcher) {
     this.matchers.push([selector, matcher]);
+  }
+
+  addAttributor(attr, type = 'style') {
+    if (type === 'attribute') {
+      ATTRIBUTE_ATTRIBUTORS[attr.keyName] = attr;
+    } else {
+      STYLE_ATTRIBUTORS[attr.keyName] = attr;
+    }
   }
 
   convert(html) {
